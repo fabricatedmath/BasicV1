@@ -2,7 +2,7 @@
 # Runs in a couple seconds (run it for longer, possibly with lower ETA, to get slightly smoother RFs).
 # Even nicer/smoother RFs if you run for longer with a smaller ETA
 # Uses the Instar Hebbian rule, softmax competition, and adaptive thresholds to drive firing rates towards 1/NBCELLS (note that actual firing rates vary quite a lot!)
-# Resulting firing is sparse, and often only once cell fires, but sometimes several cells have significant firing (rarely more than 3 though). 
+# Resulting firing is sparse, and often only once cell fires, but sometimes several cells have significant firing (rarely more than 3 though).
 # Requires patches of z-scored natural images as inputs, stored as linearized vectors in patches.npy (see makepatches.py)
 # To plot the resulting RFs, run plotRFs.py
 
@@ -12,7 +12,7 @@ import numpy as np
 np.set_printoptions(precision=4, suppress=True)
 
 patches = np.load('patches.npy') / 19.0 # Because makepatches.py stores patches with standard dev. 19 (to expand the range before conversion to integers)
-NBCELLS = 100   
+NBCELLS = 100
 SIZE = patches.shape[1]         # Size of each input patch (= RFWIDTH * RFHEIGHT)
 ETA = .01                       # Learning rate
 nbframes = patches.shape[0]     # Total number of patches in the file
@@ -27,9 +27,9 @@ thres = np.zeros(NBCELLS)
 ALPHATRACEFIRING = .99
 TARGETRATE = 1.0 / NBCELLS
 
-for nn in range(100000):  
+for nn in range(100000):
     if nn % 100 == 0:
-        print nn
+        print(nn)
     inp = patches[np.random.randint(nbframes), :]
     outs = w.dot(inp)
     outs -= thres
@@ -40,5 +40,3 @@ for nn in range(100000):
     thres +=  (firingrates - TARGETRATE)                                        # ...and use it to adjust threshold to drive firing rates towards TARGETRATE.
     #allps.append(p)
 np.save('w.npy', w)
-
-
